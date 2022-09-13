@@ -17,6 +17,6 @@ void ItemHashMap::add_to_list(const std::string& key, int val) {
 }
 
 std::ostream& operator<<(std::ostream& ost, const ItemHashMap& IHM) {
-	ost << "key: " << IHM.key << "   |||   value: " << IHM.value;
+	ost << "key: " << IHM.key << "  <----------->  value: " << IHM.value;
 	return ost;
 }

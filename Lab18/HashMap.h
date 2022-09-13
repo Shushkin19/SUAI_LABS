@@ -5,7 +5,6 @@
 
 class HashMap
 {
-	//std::list<ItemHashMap>* l;
 	std::vector<std::list<ItemHashMap>> data; //—оздал вектор , который хранит св€зный список,
 											   //который хранит класс с ключом и значением
 	int capacity;
@@ -13,14 +12,14 @@ class HashMap
 
 public:
 	HashMap();
-	//~HashMap();
+	~HashMap();
 	void insert(const std::string& key, int value);
 	std::pair<int, bool> find(const std::string& key); //bool --- найден или нет, int --- значение
 	void erase(const std::string& key);// удал€ет один экземпл€р записи
 	friend std::ostream& operator<<(std::ostream& ost, const HashMap& HM);
-	friend int HashFunction(const std::string& key);
+	friend unsigned int HashFunction(const std::string& key);
 };
 
 std::ostream& operator<<(std::ostream& ost, const HashMap& HM);
 
-int HashFunction(const std::string& key);
+unsigned int HashFunction(const std::string& key);
