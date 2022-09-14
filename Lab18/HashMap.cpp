@@ -1,5 +1,5 @@
 #include "HashMap.h"
-#define	BASE_SIZE_VECTOR 5
+#define	BASE_SIZE_VECTOR 47	
 
 
 
@@ -11,22 +11,25 @@ HashMap::HashMap() {
 	count = 1;
 }
 
-unsigned int HashFunction(const std::string& key) { /// Придумать нормальную хэш-функцию
-	static int p = 1; 
-	//unsigned int hsh = key.size() + 122 << (key.size() + 22 * 24 % 64); 
-	unsigned int hsh = p;
-	p++;
+unsigned int HashFunction(const std::string& key) { //Построение хеш-функции методом деления https://clck.ru/322Qr7
+	const char* c_string = key.c_str();
+	long long hsh = (int)c_string[0] << key.size();
 	hsh %= GLOBAL_SIZE_VECTOR;
 	return hsh;
 }
 
+void RebuildHashMap() {
+	
+}
+
 void HashMap::insert(const std::string& key, int value) {
-	int hash = HashFunction(key);
-	static int mul_val = 2;
+	unsigned int hash = HashFunction(key);
+
+
 	if (this->count == GLOBAL_SIZE_VECTOR) {
-		GLOBAL_SIZE_VECTOR *= mul_val;
+		GLOBAL_SIZE_VECTOR *= 2;
+		GLOBAL_SIZE_VECTOR++;					/// При новом размере таблицы переобрать её используя уже другой hash!
 		data.resize(GLOBAL_SIZE_VECTOR);
-		mul_val++;
 		capacity = GLOBAL_SIZE_VECTOR;
 	}
 	/*
@@ -51,7 +54,7 @@ std::ostream& operator<<(std::ostream& ost, const HashMap& HM) {
 	for (int i = 0; i < HM.capacity; i++) {
 		if (HM.data[i].empty() == false) {
 			if (HM.data[i].size() > 1) {
-				auto it = HM.data[i].begin();
+				
 				for (auto j = HM.data[i].begin(); j != HM.data[i].end();j++) {
 					ost<<i << "[ " << *(j) << " ]\n";
 					//ost << "[ " << *(j) << " ]\n";
@@ -66,6 +69,35 @@ std::ostream& operator<<(std::ostream& ost, const HashMap& HM) {
 		
 	}
 	return ost;
+}
+
+
+std::pair<int, bool> HashMap::find(const std::string& key) {
+		std::pair<int, bool> val;
+	int hash = HashFunction(key);
+	if (data[hash].empty() == true) {
+		val.first = 0;
+		val.second = false;
+		return val;
+	}
+	else {
+		std::list<ItemHashMap> l = data[hash];
+		for (auto i = l.begin(); i != l.end(); i++) {
+			ItemHashMap ihm = *i;
+			if (ihm.find(key) != -1) {
+				val.first = ihm.find(key);
+				val.second = true;
+				break;
+			}
+		}
+		return val;
+	}
+	
+}
+
+void HashMap::erase(const std::string& key) {
+	unsigned int hash = HashFunction(key);
+	data[hash].clear();
 }
 
 HashMap::~HashMap() {

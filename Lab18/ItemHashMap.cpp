@@ -20,3 +20,12 @@ std::ostream& operator<<(std::ostream& ost, const ItemHashMap& IHM) {
 	ost << "key: " << IHM.key << "  <----------->  value: " << IHM.value;
 	return ost;
 }
+
+int ItemHashMap::find(const std::string& ky) {
+	if (key == ky) {
+		return this->value;
+	}
+	else {
+		return -1;
+	}
+}
