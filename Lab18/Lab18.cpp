@@ -9,6 +9,8 @@ int main() {
 	map.insert("Yaroslav3", 43);
 	map.insert("Petr4", 13);
 	map.insert("Kolya5", 20);
+	std::cout << map;
+	std::cout << "---------------------------\n";
 	map.insert("Yan6", 18);
 	map.insert("Aleksandr7", 48);
 	map.insert("Pppppppppppppppppppppp8", 22);
@@ -17,9 +19,9 @@ int main() {
 	map.insert("eee11", 12);
 	map.insert("eeeeee12", 12);
 	std::cout << map;
+	std::cout << "---------------------------\n";
 	map.erase("Vova1");
 	map.erase("e9");
-	std::cout << "---------------------------\n";
 	std::cout << map;
 	std::cout << "---------------------------\n";
 	std::pair<int, bool> g;

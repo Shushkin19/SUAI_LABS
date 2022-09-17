@@ -1,12 +1,12 @@
 #include "HashMap.h"
-#define	BASE_SIZE_VECTOR 47	
+#define	BASE_SIZE_VECTOR 5
 
 
 
 int GLOBAL_SIZE_VECTOR = BASE_SIZE_VECTOR;
 
 HashMap::HashMap() {
-	data.resize(sizeof(std::list<ItemHashMap>)*BASE_SIZE_VECTOR);
+	data.resize(BASE_SIZE_VECTOR);
 	capacity = BASE_SIZE_VECTOR;
 	count = 1;
 }
@@ -18,20 +18,52 @@ unsigned int HashFunction(const std::string& key) { //Построение хеш-функции мет
 	return hsh;
 }
 
-void RebuildHashMap() {
+void HashMap::RebuildHashMap() {
 	
+	int tmp_gl_sz_vc = GLOBAL_SIZE_VECTOR;
+	std::vector<std::list<ItemHashMap>> tmp_vc;
+	tmp_vc.resize(tmp_gl_sz_vc);
+	for (int i = 0; i < tmp_gl_sz_vc; i++) {
+		tmp_vc[i] = data[i];
+		data[i].clear();
+	}
+	data.clear();
+	count = 1;
+	GLOBAL_SIZE_VECTOR *= 2;
+	GLOBAL_SIZE_VECTOR++;					/// При новом размере таблицы переобрать её используя уже другой hash!
+	data.resize(GLOBAL_SIZE_VECTOR);
+	ItemHashMap tmp_im;
+	std::string tmp_key;
+	for (int i = 0; i < tmp_gl_sz_vc; i++) {
+	std::list<ItemHashMap> l = tmp_vc[i];
+		for (auto it = l.begin(); it != l.end(); it++) {
+			tmp_im = *it;
+			tmp_key = tmp_im.get_key();
+			if (data[HashFunction(tmp_key)].empty() == false) {
+				data[HashFunction(tmp_key)].push_back(*it);
+			}
+			else {
+				data[HashFunction(tmp_key)].push_back(*it);
+				count++;
+			}
+		}
+	}
+
+	capacity = GLOBAL_SIZE_VECTOR;
+
+
+	
+
+
 }
 
 void HashMap::insert(const std::string& key, int value) {
-	unsigned int hash = HashFunction(key);
 
 
 	if (this->count == GLOBAL_SIZE_VECTOR) {
-		GLOBAL_SIZE_VECTOR *= 2;
-		GLOBAL_SIZE_VECTOR++;					/// При новом размере таблицы переобрать её используя уже другой hash!
-		data.resize(GLOBAL_SIZE_VECTOR);
-		capacity = GLOBAL_SIZE_VECTOR;
+		RebuildHashMap();
 	}
+	unsigned int hash = HashFunction(key);
 	/*
 	Здесь реализуется основная идея метода цепочек. Если связный список не пустой, тогда добавить новую пару,
 	иначе создать первую пару ключ-значение.
@@ -41,9 +73,7 @@ void HashMap::insert(const std::string& key, int value) {
 		data[hash].push_back(ItemHashMap(key, value));
 	}
 	else {
-		std::list<ItemHashMap> l;
-		l.push_back(ItemHashMap(key, value));
-		data[hash] = l;
+		data[hash].push_back(ItemHashMap(key,value));
 		count++;
 	
 	}
@@ -97,7 +127,15 @@ std::pair<int, bool> HashMap::find(const std::string& key) {
 
 void HashMap::erase(const std::string& key) {
 	unsigned int hash = HashFunction(key);
-	data[hash].clear();
+	ItemHashMap ihm;
+	for (auto it = data[hash].begin(); it != data[hash].end(); it++) {
+			ihm = *it;
+			std::string st = ihm.get_key();
+			if (st == key) {
+				data[hash].erase(it);
+				break;
+			}
+	}
 }
 
 HashMap::~HashMap() {

@@ -18,11 +18,11 @@ public:
 	void erase(const std::string& key);// удаляет один экземпляр записи
 	friend std::ostream& operator<<(std::ostream& ost, const HashMap& HM);
 	friend unsigned int HashFunction(const std::string& key);
-	friend void RebuildHashMap();
+	void RebuildHashMap();
+	
 };
 
 std::ostream& operator<<(std::ostream& ost, const HashMap& HM);
 
 unsigned int HashFunction(const std::string& key);
 
-void RebuildHashMap();

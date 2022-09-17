@@ -29,3 +29,7 @@ int ItemHashMap::find(const std::string& ky) {
 		return -1;
 	}
 }
+
+std::string ItemHashMap::get_key() {
+	return this->key;
+}
