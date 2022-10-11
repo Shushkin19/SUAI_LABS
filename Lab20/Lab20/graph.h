@@ -18,7 +18,8 @@ class graph
 public:
 	graph();
 	void initialize_graph(string name);
-	void dfs(int v);
+	void dfs(int v,int p);
+	void vertex_list(string file);
 
 };
 
